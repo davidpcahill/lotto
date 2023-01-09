@@ -18,8 +18,8 @@ seeder = SystemRandom()
 
 # Create quick pick ticket
 print("Selecting quick pick for odds test.")
-qp_numbers = seeder.sample(white_balls, 5)
-qp_meganumber = seeder.sample(red_balls, 1)
+qp_numbers = seeder.sample(list(white_balls), 5)
+qp_meganumber = seeder.sample(list(red_balls), 1)
 # Sort quick pick
 qp_numbers.sort()
 # Show quick pick
@@ -48,8 +48,8 @@ while True:
     mega_match_count = 0
 
     # Draw numbers
-    white_draws = seeder.sample(white_balls, 5)
-    red_draw = seeder.sample(red_balls, 1)
+    white_draws = seeder.sample(list(white_balls), 5)
+    red_draw = seeder.sample(list(red_balls), 1)
 
     # Sort white draws
     white_draws.sort()
