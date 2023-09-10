@@ -1,30 +1,24 @@
 # Mega Millions Simulator
 
-This Python script simulates the drawing of Mega Millions lottery numbers and checks the odds of winning based on a single quick pick ticket.
+Simulate your chances of winning the Mega Millions lottery with this Python-based simulator. Whether you're curious about the odds or just want to test your luck, this tool provides a detailed breakdown of outcomes based on your chosen numbers or random picks.
 
 ## Features
 
-- **Secure Random Number Generation**: Uses a cryptographically secure random number generator for drawing numbers.
-- **Extensive Simulation**: Simulates over a billion drawings to provide a comprehensive statistical analysis.
-- **ASCII Distribution Graph**: Provides a visual representation of the results.
-- **Detailed Statistics**: Displays statistics like the winning percentage and the number of draws for each win category.
+- **Manual Number Entry**: Input your favorite numbers and see how they fare.
+- **Quick Pick Options**: Let the simulator pick numbers for you, either once or for every draw.
+- **Detailed Statistics**: After each simulation, get a breakdown of wins, losses, and the distribution of drawn numbers.
+- **ASCII Distribution Graph**: Visualize the distribution of results with a simple ASCII graph.
+- **Real-time Odds Display**: Understand the statistical odds of winning each prize tier before starting the simulation.
 
 ## Usage
 
-1. Clone the repository or download the script.
-2. Run the script using Python
-3. The script will generate a quick pick ticket and then simulate the drawings, providing updates every 1,000,000 draws.
+1. Run the script: `python gpt-megamillions.py`
+2. Choose your preferred method of number selection:
+   - Enter numbers manually.
+   - Quick Pick a single random set for all draws.
+   - Quick Pick new numbers for every draw.
+3. Watch the simulation unfold and review the results.
 
-## Output
+## Note
 
-The script provides detailed statistics including:
-
-- Number of losses
-- Wins for each category (e.g., "0 + Mega", "1 + Mega", "2 + Mega", etc.)
-- An ASCII distribution graph for a visual representation
-- Winning percentage
-- Total number of simulated drawings
-
-## Customization
-
-You can easily modify the script to change the number of simulated drawings or to adjust the visual representation.
+This simulator is for entertainment and educational purposes only. Always play responsibly.
