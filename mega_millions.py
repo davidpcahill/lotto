@@ -1,116 +1,91 @@
-from random import SystemRandom, sample
+from random import SystemRandom
 
 # Virtual balls
-white_balls = set([1,2,3,4,5,6,7,8,9,10,
-               11,12,13,14,15,16,17,18,19,20,
-               21,22,23,24,25,26,27,28,29,30,
-               31,32,33,34,35,36,37,38,39,40,
-               41,42,43,44,45,46,47,48,49,50,
-               51,52,53,54,55,56,57,58,59,60,
-               61,62,63,64,65,66,67,68,69,70])
-
-red_balls = set([1,2,3,4,5,6,7,8,9,10,
-             11,12,13,14,15,16,17,18,19,20,
-             21,22,23,24,25])
+white_balls = list(range(1, 71))
+red_balls = list(range(1, 26))
 
 print("Adding entropy to seeder.")
 seeder = SystemRandom()
 
 # Create quick pick ticket
 print("Selecting quick pick for odds test.")
-qp_numbers = seeder.sample(list(white_balls), 5)
-qp_meganumber = seeder.sample(list(red_balls), 1)
-# Sort quick pick
-qp_numbers.sort()
-# Show quick pick
-print("[QP Test]:", str(qp_numbers), str(qp_meganumber))
+qp_numbers = set(seeder.sample(white_balls, 5))
+qp_meganumber = seeder.choice(red_balls)
+print("[QP Test]:", sorted(qp_numbers), [qp_meganumber])
 
 # Test odds
-# TODO: see if using numpy, set, compare, etc is more efficient.
-# TODO: Add check for duplicate drawings (from previous)
 print("Performing odds test...")
 draw_count = 0
-loss = 0
-zero_and_mega = 0
-one_and_mega = 0
-two_and_mega = 0
-three_of_five = 0
-three_of_five_and_mega = 0
-four_of_five = 0
-four_of_five_and_mega = 0
-five_of_five = 0
-five_of_five_and_mega = 0
+results = {
+    "loss": 0,
+    "0 + Mega": 0,
+    "1 + Mega": 0,
+    "2 + Mega": 0,
+    "3 of 5": 0,
+    "3 of 5 + Mega": 0,
+    "4 of 5": 0,
+    "4 of 5 + Mega": 0,
+    "5 of 5": 0,
+    "5 of 5 + Mega": 0
+}
+
+def print_ascii_distribution(results, total_draws):
+    max_value = max(results.values())
+    graph_width = 50  # width of the graph in characters
+
+    print("\nASCII Distribution Graph:")
+    for key, value in sorted(results.items(), key=lambda x: x[1], reverse=True):  # Sort by value
+        bar_length = int((value / max_value) * graph_width)
+        print(f"{key: <15}: {value: >10,} | {'*' * bar_length}")
+
+    winning_draws = total_draws - results['loss']
+    winning_percentage = (winning_draws / total_draws) * 100
+    print(f"\nWinning Percentage: {winning_percentage:.2f}%")
+    print("{:,} Simulated Drawings...".format(draw_count))
+    print("-------------------------------")
+
 
 while True:
-
-    # Reset matches
-    white_match_count = 0
-    mega_match_count = 0
-
-    # Draw numbers
-    white_draws = seeder.sample(list(white_balls), 5)
-    red_draw = seeder.sample(list(red_balls), 1)
-
-    # Sort white draws
-    white_draws.sort()
-
-    # Increase count
     draw_count += 1
+    white_draws = set(seeder.sample(white_balls, 5))
+    red_draw = seeder.choice(red_balls)
 
-    # Check draw for winners and count matches
-    for white_number in white_draws:
-        for qp_number in qp_numbers:
-            if qp_number == white_number:
-                white_match_count += 1
-    # Mega check
-    if qp_meganumber == red_draw:
-        mega_match_count = 1
+    white_match_count = len(qp_numbers.intersection(white_draws))
+    mega_match_count = 1 if qp_meganumber == red_draw else 0
 
     # Match logic counters
-    # none of 5, only Mega
-    if (white_match_count == 0) & (mega_match_count == 1):
-        zero_and_mega += 1
-    # Any 1 of 5 and Mega
-    elif (white_match_count == 1) & (mega_match_count == 1):
-        one_and_mega += 1
-    # Any 2 of 5 and Mega
-    elif (white_match_count == 2) & (mega_match_count == 1):
-        two_and_mega += 1
-    # Any 3 of 5
-    elif (white_match_count == 3) & (mega_match_count == 0):
-        three_of_five += 1
-    # Any 3 of 5 and Mega
-    elif (white_match_count == 3) & (mega_match_count == 1):
-        three_of_five_and_mega += 1
-    # Any 4 of 5
-    elif (white_match_count == 4) & (mega_match_count == 0):
-        four_of_five += 1
-    # Any 4 of 5 and Mega
-    elif (white_match_count == 4) & (mega_match_count == 1):
-        four_of_five_and_mega += 1
-    # All 5 of 5
-    elif (white_match_count == 5) & (mega_match_count == 0):
-        five_of_five += 1
-    # All 5 of 5 and Mega
-    elif (white_match_count == 5) & (mega_match_count == 1):
-        five_of_five_and_mega += 1
+    match_key = None
+    if white_match_count == 0 and mega_match_count == 1:
+        match_key = "0 + Mega"
+    elif white_match_count == 1 and mega_match_count == 1:
+        match_key = "1 + Mega"
+    elif white_match_count == 2 and mega_match_count == 1:
+        match_key = "2 + Mega"
+    elif white_match_count == 3 and mega_match_count == 0:
+        match_key = "3 of 5"
+    elif white_match_count == 3 and mega_match_count == 1:
+        match_key = "3 of 5 + Mega"
+    elif white_match_count == 4 and mega_match_count == 0:
+        match_key = "4 of 5"
+    elif white_match_count == 4 and mega_match_count == 1:
+        match_key = "4 of 5 + Mega"
+    elif white_match_count == 5 and mega_match_count == 0:
+        match_key = "5 of 5"
+        print(f"HIT! 5 of 5 achieved after {draw_count:,} draws!")
+    elif white_match_count == 5 and mega_match_count == 1:
+        match_key = "5 of 5 + Mega"
+        print(f"JACKPOT! 5 of 5 + Mega achieved after {draw_count:,} draws!")
     else:
-        loss += 1
+        match_key = "loss"
+
+    results[match_key] += 1
 
     if draw_count % 1000000 == 0:
         print("{:,}".format(draw_count), "Simulated Drawings...")
-        print("Current Statistics:")
-        print("Loss:", "{:,}".format(loss))
-        print("0 + Mega:", "{:,}".format(zero_and_mega))
-        print("1 + Mega:", "{:,}".format(one_and_mega))
-        print("2 + Mega:", "{:,}".format(two_and_mega))
-        print("3 of 5:", "{:,}".format(three_of_five))
-        print("3 of 5 + Mega:", "{:,}".format(three_of_five_and_mega))
-        print("4 of 5:", "{:,}".format(four_of_five))
-        print("4 of 5 + Mega:", "{:,}".format(four_of_five_and_mega))
-        print("5 of 5:", "{:,}".format(five_of_five))
-        print("5 of 5 + Mega:", "{:,}".format(five_of_five_and_mega))
+        for key, value in results.items():
+            print(f"{key}:", "{:,}".format(value))
         print("-------------------------------")
+        print_ascii_distribution(results, draw_count)
 
     if draw_count > 1000000000:
         print("Test complete. Draw count over 1 billion.")
